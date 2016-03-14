@@ -10,6 +10,8 @@ img2 = imgs(:,:,2);
 
 %% Apply Harris Corner Detector to images
 % Defining the image region which contains the corners
+R_surf_1 = harris_corners ( img1, 5 );
+R_surf_2 = harris_corners ( img2, 5 );
 
 %% Non-Maximum Supression to find sparse set of corner features
 
