@@ -25,7 +25,8 @@ for i=1:numPts
     A(2*i,9)=(-1)*inliers2(i,2);
 end
 
-[U,S,V] = svd(A);
+[U,S,V_trans] = svd(A);
+V = V_trans';
 lastCol = size(V,2);
 H = V(:,lastCol);
 homog = [H(1) H(2) H(3);
