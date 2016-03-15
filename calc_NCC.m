@@ -1,4 +1,4 @@
-function [ NCC_matrix ] = calc_NCC( img1, corners_1, img2, corners_2, window_size )
+function [ NCC_match ] = calc_NCC( img1, corners_1, img2, corners_2, window_size )
 %calc_NCC - calculates normalized cross-correlation between two images in
 %regions of corners
 %   Given two images, img1 and img2, calculate NCC in regions of size
@@ -14,9 +14,14 @@ n_corr_2 = size(corners_2,1);
 
 win_idx = (window_size - 1) / 2;
 
-NCC_matrix = zeros(n_corr_1,n_corr_2);
+NCC = zeros(n_corr_2,1);
+NCC_match = zeros(n_corr_1, 1);
 
 for i=1:n_corr_1
+    
+    max_NCC = -1;
+    max_idx = -1;
+    
     for j=1:n_corr_2
         
         i_1 = corners_1(i,1);
@@ -29,9 +34,15 @@ for i=1:n_corr_1
         norm_1 = sqrt( sum(sum( roi_1.^2  )) );
         norm_2 = sqrt( sum(sum( roi_2.^2  )) );
         
-        NCC_matrix(i,j)= sum(sum( (roi_1/norm_1).*(roi_2/norm_2) ));
+        NCC(j)= sum(sum( (roi_1/norm_1).*(roi_2/norm_2) ));
+        
+        if ( NCC(j) > max_NCC )
+            max_NCC = NCC(j);
+            max_idx = j;
+        end
         
     end
+    NCC_match(i)=max_idx;
 end
 
 end
