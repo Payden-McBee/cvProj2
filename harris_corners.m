@@ -9,6 +9,9 @@ if (nargin<3)
     k=0.008;
 end
 
+disp('harris corner response');
+fprintf('      k = %f\n',k);
+
 I=size(img,1);
 J=size(img,2);
 border=window_size-1;

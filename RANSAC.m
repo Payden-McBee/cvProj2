@@ -1,4 +1,4 @@
-function [ inliers_1, inliers_2 ] = RANSAC( corners_1, corners_2, matches )
+function [ inliers_1, inliers_2 ] = RANSAC( corners_1, corners_2, matches, dist_thresh, inliers_thresh )
 %UNTITLED4 Summary of this function goes here
 %   Detailed explanation goes here
 
