@@ -26,8 +26,8 @@ for i=1:n_corr_1
         
         i_1 = corners_1(i,1);
         j_1 = corners_1(i,2);
-        i_2 = corners_2(i,1);
-        j_2 = corners_2(i,2);
+        i_2 = corners_2(j,1);
+        j_2 = corners_2(j,2);
         
         if (    i_1-win_idx > 0 && i_1+win_idx< size(img1,1) && ...
                 i_2-win_idx>0 && i_2+win_idx<size(img2,1) && ...

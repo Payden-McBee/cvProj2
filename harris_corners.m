@@ -12,7 +12,7 @@ end
 disp('harris corner response');
 fprintf('      k = %f\n',k);
 
-img=img.';
+% img=img.';
 I=size(img,1);
 J=size(img,2);
 border=window_size-1;

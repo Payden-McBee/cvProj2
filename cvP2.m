@@ -30,7 +30,7 @@ disp('done performing nonmax supression')
 %% Compute NCC (normalized cross correlation), threshold
 disp('computing NCC in regions of corners')
 NCC_win_size = 5;
-matches = calc_NCC( img1, corners_1, img2, corners_2, NCC_win_size );
+matches = calc_NCC( img1_double, corners_1, img2_double, corners_2, NCC_win_size );
 disp('done computing NCC')
 
 %% Estimate the homography using chosen corners using RANSAC
