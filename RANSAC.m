@@ -29,7 +29,8 @@ while (1==1)
             -points_2(i,2)];
     end
    
-    [~, ~, V] = svd(A);
+    [~, ~, V_trans] = svd(A);
+    V = V_trans';
     homography = V(:,size(V,2));
     
     h = zeros(3,3);
