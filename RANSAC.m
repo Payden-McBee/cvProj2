@@ -14,6 +14,10 @@ while (1==1)
     
     for i=1:4
         point_idx = floor(rand*num_points) + 1;
+        while (matches(point_idx)<0)
+            point_idx = floor(rand*num_points) + 1;
+        end
+        
         points_1(i,:) = corners_1(point_idx,:);
         points_2(i,:) = corners_2(matches(point_idx),:);
         
