@@ -16,6 +16,7 @@ numAboveThresh;
 row=1;
 for i = 1:(size(nms_R_surface,1)-window_size+1)
     for j = 1:(size(nms_R_surface,2)-window_size+1)
+        maxNotFound = 1;
         window = nms_R_surface(i:(i+window_size-1),j:(j+window_size-1));
         localMax = max(max(window));
         if localMax < thresh
@@ -23,16 +24,30 @@ for i = 1:(size(nms_R_surface,1)-window_size+1)
         else 
             for k = 1:size(window,1)
                 for l = 1:size(window,2)
-                    if window(k,l)<localMax
-                        nms_R_surface(i+k-1,j+l-1)=0; %not a local max
-                    else %save coords of local max
-                        corners(row,1)=i+k-1;%save x coord
-                        corners(row,2)=j+l-1; %save y coord
-                        nms_R_surface(i+k-1,j+l-1)=0;%so it isn't counted again
-                        row = row + 1;                   
+                    if maxNotFound
+                        if window(k,l)<localMax
+                            nms_R_surface(i+k-1,j+l-1)=0; %not a local max
+                            maxNotFound = 1;
+                        else %save coords of local max
+                            maxNotFound = 0;                                             
+                        end
+                    else %local max is found, set rest in window to zero
+                        nms_R_surface(i+k-1,j+l-1)=0;
                     end
+                    
                 end
             end
+        end
+    end
+end
+row = 1;
+for i = 1:size(nms_R_surface,1)
+    for j = 1:size(nms_R_surface,2)
+        if nms_R_surface(i,j) == 0 
+            %not a corner
+        else
+            corners(row,:) = [i j];
+            row=row+1;
         end
     end
 end
