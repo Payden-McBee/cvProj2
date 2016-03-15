@@ -28,17 +28,25 @@ for i=1:n_corr_1
         j_1 = corners_1(i,2);
         i_2 = corners_2(i,1);
         j_2 = corners_2(i,2);
-        roi_1 = img1(i_1-win_idx:i_1+win_idx,j_1-win_idx:j_1+win_idx);
-        roi_2 = img2(i_2-win_idx:i_2+win_idx,j_2-win_idx:j_2+win_idx);
         
-        norm_1 = sqrt( sum(sum( roi_1.^2  )) );
-        norm_2 = sqrt( sum(sum( roi_2.^2  )) );
+        if (    i_1-win_idx > 0 && i_1+win_idx< size(img1,1) && ...
+                i_2-win_idx>0 && i_2+win_idx<size(img2,1) && ...
+                j_1-win_idx>0 && j_1+win_idx<size(img1,2) && ...
+                j_2-win_idx>0 && j_2+win_idx<size(img2,2) )
         
-        NCC(j)= sum(sum( (roi_1/norm_1).*(roi_2/norm_2) ));
-        
-        if ( NCC(j) > max_NCC )
-            max_NCC = NCC(j);
-            max_idx = j;
+            roi_1 = img1(i_1-win_idx:i_1+win_idx,j_1-win_idx:j_1+win_idx);
+            roi_2 = img2(i_2-win_idx:i_2+win_idx,j_2-win_idx:j_2+win_idx);
+
+            norm_1 = sqrt( sum(sum( roi_1.^2  )) );
+            norm_2 = sqrt( sum(sum( roi_2.^2  )) );
+
+            NCC(j)= sum(sum( (roi_1/norm_1).*(roi_2/norm_2) ));
+
+            if ( NCC(j) > max_NCC )
+                max_NCC = NCC(j);
+                max_idx = j;
+            end
+            
         end
         
     end
