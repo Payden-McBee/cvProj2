@@ -38,6 +38,6 @@ dist_thresh = 10;
 inliers_thresh = 0.9;
 [inliers_1, inliers_2] = RANSAC( corners_1, corners_2, matches, dist_thresh, inliers_thresh);
 
-
+h = homogFromSVD( inliers_1, inliers_2 );
 
 %% Warp one image onto the other 
