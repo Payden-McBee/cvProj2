@@ -21,10 +21,10 @@ while (1==1)
         points_1(i,:) = corners_1(point_idx,:);
         points_2(i,:) = corners_2(matches(point_idx),:);
         
-        A(2*(i-1) + 1,:) = [points_1(i,1), points_2(i,2) 1 0 0 0 ...
+        A(2*i - 1,:) = [points_1(i,1), points_1(i,2) 1 0 0 0 ...
             -points_1(i,1)*points_2(i,1) -points_1(i,2)*points_2(i,1) ...
             -points_2(i,1)];
-        A(2*(i-1) + 2,:) = [0 0 0 points_1(i,1) points_1(i,2) 1 ...
+        A(2*i,:) = [0 0 0 points_1(i,1) points_1(i,2) 1 ...
             -points_1(i,1)*points_2(i,2) -points_1(i,2)*points_2(i,2) ...
             -points_2(i,2)];
     end
@@ -40,7 +40,7 @@ while (1==1)
     
     points_1_proj = ones(num_points, 3);
     points_1_proj(:,1:2)=corners_1(:,:);
-    points_1_prime_proj = zeros(num_points,3);
+    points_1_prime_proj = zeros(3,num_points);
     
     inliers = 0;
     inliers_1_buff = zeros(num_matches,2);
@@ -52,10 +52,10 @@ while (1==1)
             continue
         end
         
-        points_1_prime_proj(i,:) = h*points_1_proj(i,:).';
-        points_1_prime = points_1_prime_proj(i,1:2) / points_1_prime_proj(i,3);
+        points_1_prime_proj(:,i) = h*points_1_proj(i,:).';
+        points_1_prime = points_1_prime_proj(1:2,i) / points_1_prime_proj(3,i);
 
-        dist = norm(points_1_prime - corners_2(matches(i),:));
+        dist = norm(points_1_prime.' - corners_2(matches(i),:));
         
         if ( dist < dist_thresh )
             inliers = inliers+1;
