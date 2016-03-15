@@ -3,7 +3,7 @@ function [ R_surface ] = harris_corners( img, window_size, k )
 %   accepts a grayscale image, img, an (odd) integer window size,
 %   window_size, and a weighting value k (default k=0.008)
 %
-%   computes the 
+%   finds corners using harris corner detection
 
 if (nargin<3)
     k=0.008;
