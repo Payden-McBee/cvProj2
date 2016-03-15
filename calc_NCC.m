@@ -1,6 +1,13 @@
 function [ NCC_matrix ] = calc_NCC( img1, corners_1, img2, corners_2, window_size )
-%UNTITLED3 Summary of this function goes here
-%   Detailed explanation goes here
+%calc_NCC - calculates normalized cross-correlation between two images in
+%regions of corners
+%   Given two images, img1 and img2, calculate NCC in regions of size
+%   window_size centered at corners given by corners_1 and corners_2,
+%   respectively
+%
+%   Returns a matrix of size ( |corners_1|, |corners_2| ) where the each
+%   element, (i,j) is the NCC of the regions centered at corner i in img1
+%   and corner j in img2
 
 n_corr_1 = size(corners_1,1);
 n_corr_2 = size(corners_2,1);
