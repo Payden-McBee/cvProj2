@@ -41,4 +41,4 @@ inliers_thresh = 0.9;
 h = homogFromSVD( inliers_1, inliers_2 );
 
 %% Warp one image onto the other
-warpImage(img1,h);
+warpImage(img1, img2, h);
