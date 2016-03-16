@@ -9,8 +9,8 @@ img2Xmax = size(img2,2);
 img2Ymax = size(img2,1);
 
 topLcorner1 = [1 1 1]';
-topRcorner1 = [1 size(img1,1) 1]';
-botLcorner1 = [size(img1,2) 1 1]';
+topRcorner1 = [size(img1,2) 1 1]';
+botLcorner1 = [1 size(img1,1) 1]';
 botRcorner1 = [size(img1,2) size(img1,1) 1]';
 
 tLcTrans = (H*topLcorner1);
@@ -34,54 +34,33 @@ maxXval = round(max( [tLC_x, tRC_x, bLC_x, bRC_x, img2Xmax] ));
 minYval = round(min( [tLC_y, tRC_y, bLC_y, bRC_y, img2Ymin] ));
 maxYval = round(max( [tLC_y, tRC_y, bLC_y, bRC_y, img2Ymax] ));
 
-final_x_size = maxXval - minXval;
-final_y_size = maxYval - minYval;
+final_x_size = maxXval - minXval + 1;
+final_y_size = maxYval - minYval + 1;
 
-% if minXval < 1
-%     leftMargin = abs(minXval);
-%     rightMargin =0; %only 1 side can be out of bounds bc same size image
-% else
-%     leftMargin = 0; 
-%     if maxXval > img2Xmax
-%         rightMargin = maxXval - img2Xmax;
-%     else
-%         rightMargin = 0;
-%     end
-% end
-% 
-% if minYval < 1
-%     topMargin = abs(minYval);
-%     botMargin =0; %only 1 side can be out of bounds bc same size image
-% else
-%     topMargin = 0; 
-%     if maxYval > img2Ymax
-%         botMargin = maxYval - img2Ymax;
-%     else
-%         botMargin = 0;
-%     end
-% end
-% 
-% numRows = size(img2,1) + leftMargin + rightMargin;
-% numCols = size(img2,2) + topMargin + botMargin;
+trans = [1 0 -minXval+1;
+         0 1 -minYval+1;
+         0 0  1 ];
+invTrans = inv(trans);
 
-destI = zeros(final_x_size, final_y_size);
-%%%%%%%%%%%%%%%%%%%%%%
-
-figure;
-imshow(img1)
-title('Office')
 img1=double(img1);
 
-hom=H;
-h = inv(hom);
+h = inv(trans*H);
 
-[xi, yi] = meshgrid(1:size(destI,2),1:size(destI,1)); %not sure if this works
+[xi, yi] = meshgrid(1:final_x_size,1:final_y_size);
 xx = (h(1,1)*xi+h(1,2)*yi+h(1,3))./(h(3,1)*xi+h(3,2)*yi+h(3,3));
 yy = (h(2,1)*xi+h(2,2)*yi+h(2,3))./(h(3,1)*xi+h(3,2)*yi+h(3,3));
 
 img1Trans = uint8(interp2(img1,xx,yy));
-figure;
-imshow(img1Trans)
-title('Trans Image')
+ 
+[xii, yii] = meshgrid(1:final_x_size,1:final_y_size);
+xx = (invTrans(1,1)*xii+invTrans(1,2)*yii+invTrans(1,3))./(invTrans(3,1)*xii+invTrans(3,2)*yii+invTrans(3,3));
+yy = (invTrans(2,1)*xii+invTrans(2,2)*yii+invTrans(2,3))./(invTrans(3,1)*xii+invTrans(3,2)*yii+invTrans(3,3));
 
-nImg = img1Trans;
+img2 = double(img2);
+img2Trans = uint8(interp2(img2,xx,yy));
+
+blended_img = imfuse(img1Trans, img2Trans, 'blend');
+
+figure;imshow(blended_img);
+
+nImg = blended_img;

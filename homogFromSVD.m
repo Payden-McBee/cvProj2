@@ -30,4 +30,4 @@ lastCol = size(V,2);
 H = V(:,lastCol-1);
 homog = [H(1) H(2) H(3);
          H(4) H(5) H(6);
-         H(7) H(8) H(9)]
+         H(7) H(8) H(9)];
