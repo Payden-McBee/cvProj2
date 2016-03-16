@@ -40,7 +40,8 @@ while (1==1)
     h(3,:)=homography(7:9);
     
     points_1_proj = ones(num_points, 3);
-    points_1_proj(:,1:2)=corners_1(:,:);
+    points_1_proj(:,1)=corners_1(:,2);
+    points_1_proj(:,2)=corners_1(:,1);
     points_1_prime_proj = zeros(3,num_points);
     
     inliers = 0;
