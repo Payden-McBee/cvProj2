@@ -23,20 +23,23 @@ disp('done calculating harris corner response')
 %placeholders
 disp('performing nonmaximal suprression')
 nonmax_win_size = 7;
-corners_1 = nonmaxSupression( R_surf_1, nonmax_win_size );
-corners_2 = nonmaxSupression( R_surf_2, nonmax_win_size );
+nonmax_thresh = 350;
+corners_1 = nonmaxSupression( R_surf_1, nonmax_win_size, nonmax_thresh );
+corners_2 = nonmaxSupression( R_surf_2, nonmax_win_size, nonmax_thresh );
 disp('done performing nonmax supression')
+
+%TESTING - diagnostic plots
+figure(3);imshow(img1);hold on;scatter(corners_1(:,2),corners_1(:,1));
+figure(4);imshow(img2);hold on;scatter(corners_2(:,2),corners_2(:,1));
 
 %% Compute NCC (normalized cross correlation), threshold
 disp('computing NCC in regions of corners')
-NCC_win_size = 5;
-figure(3);imshow(img1);
-figure(4);imshow(img2);
+NCC_win_size = 7;
 matches = calc_NCC( img1_double, corners_1, img2_double, corners_2, NCC_win_size );
 disp('done computing NCC')
 
 %% Estimate the homography using chosen corners using RANSAC
-dist_thresh = 20;
+dist_thresh = 100;
 inliers_thresh = 0.75;
 [inliers_1, inliers_2] = RANSAC( corners_1, corners_2, matches, dist_thresh, inliers_thresh);
 

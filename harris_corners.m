@@ -53,5 +53,5 @@ for i=border:I-border
 end
 
 %TESTING - plot R surface
-figure;imagesc(R_surface);
+%figure;imagesc(R_surface);
 
