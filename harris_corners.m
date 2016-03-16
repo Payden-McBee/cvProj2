@@ -15,33 +15,33 @@ fprintf('      k = %f\n',k);
 %img=img.';
 I=size(img,1);
 J=size(img,2);
-border=window_size-1;
-
-%compute x component of image gradient
-x_filter = [-2 -1 0 1 2];
-img_x = zeros(I-2,J-2);
-for i=3:I-2
-    for j=3:J-2
-        img_x(i-2,j-2)=sum(x_filter.*squeeze(img(i-2:i+2,j)).');
-    end
-end
+border=(window_size-1)/2;
 
 %compute y component of image gradient
 y_filter = [-2 -1 0 1 2];
 img_y = zeros(I-2,J-2);
 for i=3:I-2
     for j=3:J-2
-        img_y(i-2,j-2)=sum(y_filter.*squeeze(img(i,j-2:j+2)));
+        img_y(i-2,j-2)=sum(y_filter.*squeeze(img(i-2:i+2,j)).');
+    end
+end
+
+%compute x component of image gradient
+x_filter = [-2 -1 0 1 2];
+img_x = zeros(I-2,J-2);
+for i=3:I-2
+    for j=3:J-2
+        img_x(i-2,j-2)=sum(x_filter.*squeeze(img(i,j-2:j+2)));
     end
 end
 
 R_surface = zeros(I-border,J-border);
 M = zeros(2);
 
-for i=border:I-border
-    for j=border:J-border
-        x_grads=img_x(i-border+1:i+border-2,j-border+1:j+border-2);
-        y_grads=img_y(i-border+1:i+border-2,j-border+1:j+border-2);
+for i=border+1:I-border-2
+    for j=border+1:J-border-2
+        x_grads=img_x(i-border:i+border,j-border:j+border);
+        y_grads=img_y(i-border:i+border,j-border:j+border);
         
         M(1,1)=sum(sum( x_grads.*x_grads ));
         M(1,2)=sum(sum( x_grads.*y_grads ));
@@ -53,5 +53,5 @@ for i=border:I-border
 end
 
 %TESTING - plot R surface
-%figure;imagesc(R_surface);
+figure;imagesc(R_surface);
 

@@ -23,17 +23,16 @@ while (1==1)
         points_2(i,1) = corners_2(matches(point_idx),2);
         points_2(i,2) = corners_2(matches(point_idx),1);
         
-        A(2*i - 1,:) = [points_1(i,1), points_1(i,2) 1 0 0 0 ...
-            -points_1(i,1)*points_2(i,1) -points_1(i,2)*points_2(i,1) ...
+        A(2*i - 1,:) = [points_1(i,1), points_1(i,2), 1, 0, 0, 0, ...
+            -points_1(i,1)*points_2(i,1), -points_1(i,2)*points_2(i,1), ...
             -points_2(i,1)];
-        A(2*i,:) = [0 0 0 points_1(i,1) points_1(i,2) 1 ...
-            -points_1(i,1)*points_2(i,2) -points_1(i,2)*points_2(i,2) ...
+        A(2*i,:) = [0, 0, 0, points_1(i,1), points_1(i,2), 1, ...
+            -points_1(i,1)*points_2(i,2), -points_1(i,2)*points_2(i,2), ...
             -points_2(i,2)];
     end
    
-    [~, ~, V] = svd(A);
-%     V = V_trans';
-    homography = V(:,size(V,2));
+    [U, S, V] = svd(A);
+    homography = V(:,size(V,2)-1);
     
     h = zeros(3,3);
     h(1,:)=homography(1:3);
@@ -62,6 +61,9 @@ while (1==1)
 
         dist = norm(points_1_prime.' - matched_point);
         
+        figure(4);hold on;scatter(matched_point(1),matched_point(2),'r');
+        figure(4);hold on;scatter(points_1_prime(1),points_1_prime(2),'k');
+        
         if ( dist < dist_thresh )
             inliers = inliers+1;
             inliers_1_buff(inliers,:)= corners_1(i,:);
@@ -78,6 +80,5 @@ while (1==1)
     end
 
 end
-
 
 end

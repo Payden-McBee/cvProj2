@@ -22,8 +22,8 @@ disp('done calculating harris corner response')
 %% Non-Maximum Supression to find sparse set of corner features
 %placeholders
 disp('performing nonmaximal suprression')
-nonmax_win_size = 7;
-nonmax_thresh = 350;
+nonmax_win_size = 9;
+nonmax_thresh = 300;
 corners_1 = nonmaxSupression( R_surf_1, nonmax_win_size, nonmax_thresh );
 corners_2 = nonmaxSupression( R_surf_2, nonmax_win_size, nonmax_thresh );
 disp('done performing nonmax supression')
@@ -34,13 +34,13 @@ figure(4);imshow(img2);hold on;scatter(corners_2(:,2),corners_2(:,1));
 
 %% Compute NCC (normalized cross correlation), threshold
 disp('computing NCC in regions of corners')
-NCC_win_size = 7;
+NCC_win_size = 15;
 matches = calc_NCC( img1_double, corners_1, img2_double, corners_2, NCC_win_size );
 disp('done computing NCC')
 
 %% Estimate the homography using chosen corners using RANSAC
-dist_thresh = 100;
-inliers_thresh = 0.75;
+dist_thresh = 50;
+inliers_thresh = 0.66;
 [inliers_1, inliers_2] = RANSAC( corners_1, corners_2, matches, dist_thresh, inliers_thresh);
 
 h = homogFromSVD( inliers_1, inliers_2 );

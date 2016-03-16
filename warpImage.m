@@ -5,8 +5,8 @@ function nImg = warpImage(img1, img2,H)
 
 img2Xmin = 1;
 img2Ymin = 1;
-img2Xmax = size(img2,1);
-img2Ymax = size(img2,2);
+img2Xmax = size(img2,2);
+img2Ymax = size(img2,1);
 
 topLcorner1 = [1 1 1]';
 topRcorner1 = [1 size(img1,1) 1]';
@@ -29,10 +29,10 @@ bRC_y = bRcTrans(2)/bRcTrans(3);
 
 % determine destination image size from bounds of transformed img1 and img2
 minXval = round(min( [tLC_x, tRC_x, bLC_x, bRC_x, img2Xmin] ));
-maxXval = round(max( [tLC_x, tRC_x, bLC_x, bRC_x, img2Xmin] ));
+maxXval = round(max( [tLC_x, tRC_x, bLC_x, bRC_x, img2Xmax] ));
 
 minYval = round(min( [tLC_y, tRC_y, bLC_y, bRC_y, img2Ymin] ));
-maxYval = round(max( [tLC_y, tRC_y, bLC_y, bRC_y, img2Ymin] ));
+maxYval = round(max( [tLC_y, tRC_y, bLC_y, bRC_y, img2Ymax] ));
 
 final_x_size = maxXval - minXval;
 final_y_size = maxYval - minYval;
