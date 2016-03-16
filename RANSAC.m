@@ -18,8 +18,10 @@ while (1==1)
             point_idx = floor(rand*num_points) + 1;
         end
         
-        points_1(i,:) = corners_1(point_idx,:);
-        points_2(i,:) = corners_2(matches(point_idx),:);
+        points_1(i,1) = corners_1(point_idx,2);
+        points_1(i,2) = corners_1(point_idx,1);
+        points_2(i,1) = corners_2(matches(point_idx),2);
+        points_2(i,2) = corners_2(matches(point_idx),1);
         
         A(2*i - 1,:) = [points_1(i,1), points_1(i,2) 1 0 0 0 ...
             -points_1(i,1)*points_2(i,1) -points_1(i,2)*points_2(i,1) ...
@@ -29,8 +31,8 @@ while (1==1)
             -points_2(i,2)];
     end
    
-    [~, ~, V_trans] = svd(A);
-    V = V_trans';
+    [~, ~, V] = svd(A);
+%     V = V_trans';
     homography = V(:,size(V,2));
     
     h = zeros(3,3);
@@ -54,8 +56,11 @@ while (1==1)
         
         points_1_prime_proj(:,i) = h*points_1_proj(i,:).';
         points_1_prime = points_1_prime_proj(1:2,i) / points_1_prime_proj(3,i);
+        
+        matched_point(1) = corners_2(matches(i),2);
+        matched_point(2) = corners_2(matches(i),1);
 
-        dist = norm(points_1_prime.' - corners_2(matches(i),:));
+        dist = norm(points_1_prime.' - matched_point);
         
         if ( dist < dist_thresh )
             inliers = inliers+1;

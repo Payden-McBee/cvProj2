@@ -29,6 +29,9 @@ for i=1:n_corr_1
         i_2 = corners_2(j,1);
         j_2 = corners_2(j,2);
         
+        %TESTING - diagnostic plot
+        %figure(3);hold on;scatter(j_1,i_1);
+        
         if (    i_1-win_idx > 0 && i_1+win_idx< size(img1,1) && ...
                 i_2-win_idx>0 && i_2+win_idx<size(img2,1) && ...
                 j_1-win_idx>0 && j_1+win_idx<size(img1,2) && ...
@@ -51,6 +54,8 @@ for i=1:n_corr_1
         
     end
     NCC_match(i)=max_idx;
+    %TESTING - diagnostic plot
+    %figure(4);hold on;scatter(corners_2(max_idx,2),corners_2(max_idx,1));
 end
 
 end

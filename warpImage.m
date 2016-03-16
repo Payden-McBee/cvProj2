@@ -9,9 +9,9 @@ img2Xmax = size(img2,1);
 img2Ymax = size(img2,2);
 
 topLcorner1 = [1 1 1]';
-topRcorner1 = [1 size(img1,2) 1]';
-botLcorner1 = [size(img1,1) 1 1]';
-botRcorner1 = [size(img1,1) size(img1,2) 1]';
+topRcorner1 = [1 size(img1,1) 1]';
+botLcorner1 = [size(img1,2) 1 1]';
+botRcorner1 = [size(img1,2) size(img1,1) 1]';
 
 tLcTrans = (H*topLcorner1);
 tRcTrans = (H*topRcorner1);

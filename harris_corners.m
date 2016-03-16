@@ -6,13 +6,13 @@ function [ R_surface ] = harris_corners( img, window_size, k )
 %   finds corners using harris corner detection
 
 if (nargin<3)
-    k=0.008;
+    k=0.05;
 end
 
 disp('harris corner response');
 fprintf('      k = %f\n',k);
 
-% img=img.';
+%img=img.';
 I=size(img,1);
 J=size(img,2);
 border=window_size-1;
@@ -53,5 +53,5 @@ for i=border:I-border
 end
 
 %TESTING - plot R surface
-imagesc(R_surface);
+figure;imagesc(R_surface);
 

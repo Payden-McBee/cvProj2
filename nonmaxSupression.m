@@ -1,5 +1,5 @@
 function [ corners ] = nonmaxSupression( r_surface, window_size )
-thresh = 200; 
+thresh = 400; 
 nms_R_surface = r_surface;
 numAboveThresh=0;
 %compare to threshold
