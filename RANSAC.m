@@ -1,6 +1,11 @@
-function [ inliers_1, inliers_2 ] = RANSAC( matches_1, matches_2, dist_thresh, img1, img2 )
-%UNTITLED4 Summary of this function goes here
-%   Detailed explanation goes here
+function [ inliers_1, inliers_2 ] = RANSAC( matches_1, matches_2, dist_thresh, img1, img2, plot_inliers )
+%% RANSAC - eliminate outliers to compute homography
+%   This function eliminates outliers in matching features between two
+%   images
+
+if (nargin<6)
+    plot_inliers = 0;
+end
 
 num_points = size(matches_1,1);
 
@@ -36,8 +41,8 @@ for iter=1:500
     h(3,:)=homography(7:9);
     
     points_1_proj = ones(3, num_points);
-    points_1_proj(1,:)=matches_1(:,1);%x,y,1
-    points_1_proj(2,:)=matches_1(:,2);%...
+    points_1_proj(1,:)=matches_1(:,1);
+    points_1_proj(2,:)=matches_1(:,2);
     points_1_prime_proj = zeros(3,1);
     
     inliers = 0;
@@ -51,9 +56,6 @@ for iter=1:500
 
         dist = norm(points_1_prime - matches_2(i,:).');
         
-        %figure(4);hold on;scatter(matched_point(1),matched_point(2),'r');
-        %figure(4);hold on;scatter(points_1_prime(1),points_1_prime(2),'k');
-        
         if ( dist < dist_thresh )
             inliers = inliers+1;
             inliers_1_buff(inliers,:) = matches_1(i,:);
@@ -64,13 +66,11 @@ for iter=1:500
     if ( inliers > max_inliers )
         inliers_1 = inliers_1_buff(1:inliers,:);
         inliers_2 = inliers_2_buff(1:inliers,:);
-        figure(9);showMatchedFeatures(img1,img2,inliers_1,inliers_2,'montage');
         max_inliers = inliers;
     end
 
 end
 
-
-
+if(plot_inliers);figure(9);showMatchedFeatures(img1,img2,inliers_1,inliers_2,'montage');end;
 
 end

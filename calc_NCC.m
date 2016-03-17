@@ -1,19 +1,18 @@
-function [ matches_1, matches_2 ] = calc_NCC( img1, corners_1, img2, corners_2, window_size, NCC_thresh )
-%calc_NCC - calculates normalized cross-correlation between two images in
-%regions of corners
+function [ matches_1, matches_2 ] = calc_NCC( img1, corners_1, img2, corners_2, window_size, NCC_thresh, plot_matches )
+%% calc_NCC - calculates normalized cross-correlation between two regions
 %   Given two images, img1 and img2, calculate NCC in regions of size
 %   window_size centered at corners given by corners_1 and corners_2,
 %   respectively
 %
-%   Returns a matrix of size ( |corners_1|, |corners_2| ) where the each
-%   element, (i,j) is the NCC of the regions centered at corner i in img1
-%   and corner j in img2
+%   Returns two arrays that contain matching corners
+
+if (nargin<7)
+    plot_matches=0;
+end
 
 n_corr_1 = size(corners_1,1);
 n_corr_2 = size(corners_2,1);
-
 win_idx = (window_size - 1) / 2;
-
 NCC_match = zeros(n_corr_1, 1);
 
 for i=1:n_corr_1
@@ -24,9 +23,6 @@ for i=1:n_corr_1
     i_1 = corners_1(i,1);
     j_1 = corners_1(i,2);
     
-%     figure(3);hold on;imshow(img1);scatter(j_1,i_1,'r','LineWidth',3);
-%     figure(4);hold on;imshow(img2);
-    
     if ( i_1-win_idx>0 && i_1+win_idx<size(img1,1) && ...
                 j_1-win_idx>0 && j_1+win_idx<size(img1,2) )
 
@@ -34,8 +30,6 @@ for i=1:n_corr_1
 
             i_2 = corners_2(j,1);
             j_2 = corners_2(j,2);
-
-%             figure(4);scatter(j_2,i_2,'r','LineWidth',3);
 
             if ( i_2-win_idx>0 && i_2+win_idx<size(img2,1) && ...
                     j_2-win_idx>0 && j_2+win_idx<size(img2,2) )
@@ -51,37 +45,15 @@ for i=1:n_corr_1
                 corCoeff = normxcorr2(roi_2,roi_1);
                 NCC=corCoeff(5,5);
 
-%                 norm_1 = sqrt( sum(sum( roi_1.^2  )) );
-%                 norm_2 = sqrt( sum(sum( roi_2.^2  )) );
-%     
-%                 NCC(j)= sum(sum( (roi_1/norm_1).*(roi_2/norm_2) ));
-
                 if ( NCC > max_NCC && NCC > NCC_thresh )
                     max_NCC = NCC;
                     max_idx = j;
-                    
-%                     figure(5);imagesc(roi_1);
-%                     figure(6);imagesc(roi_2);
                 end
             
             end
-        
         end
-        
     end
-    
     NCC_match(i)=max_idx;
-    
-    %TESTING - diagnostic plots
-%     if(max_idx>0)
-% %         figure(3);hold off;imshow(img1);
-% %         figure(4);hold off;imshow(img2);
-%         figure(3);hold on;scatter(j_1,i_1,'b','LineWidth',3);
-%         figure(4);hold on;scatter(corners_2(max_idx,2),corners_2(max_idx,1),'b','LineWidth',3);
-%     end
-
-
-
 end
 
 j=1;
@@ -98,8 +70,7 @@ for i=1:size(NCC_match,1)
     
 end
 
-figure;showMatchedFeatures(img1,img2,matches_1,matches_2,'montage');
-
+if (plot_matches);figure;showMatchedFeatures(img1,img2,matches_1,matches_2,'montage');end;
 
 end
 

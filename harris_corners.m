@@ -1,5 +1,5 @@
-function [ R_surface ] = harris_corners( img, window_size, k )
-%harris corner detector
+function [ R_surface ] = harris_corners( img, window_size, k, show_R_surf )
+%% harris corner detector
 %   accepts a grayscale image, img, an (odd) integer window size,
 %   window_size, and a weighting value k (default k=0.008)
 %
@@ -7,12 +7,11 @@ function [ R_surface ] = harris_corners( img, window_size, k )
 
 if (nargin<3)
     k=0.05;
+    show_R_surf = 0;
+elseif (nargin<4)
+    show_R_surf = 0;
 end
 
-disp('harris corner response');
-fprintf('      k = %f\n',k);
-
-%img=img.';
 I=size(img,1);
 J=size(img,2);
 border=(window_size-1)/2;
@@ -52,6 +51,5 @@ for i=border+1:I-border-2
     end
 end
 
-%TESTING - plot R surface
-figure;imagesc(R_surface);
+if ( show_R_surf ); figure;imagesc(R_surface); end;
 

@@ -11,7 +11,7 @@ for i = 1:size(r_surface,1)
         end
     end
 end
-numAboveThresh;
+
 row=1;
 for i = 1:(size(nms_R_surface,1)-window_size+1)
     for j = 1:(size(nms_R_surface,2)-window_size+1)
@@ -50,4 +50,3 @@ for i = 1:size(nms_R_surface,1)
         end
     end
 end
-corners

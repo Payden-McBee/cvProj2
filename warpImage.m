@@ -1,8 +1,9 @@
 function nImg = warpImage(img1, img2,H)
 
-%%%%%%%%%%%%%%%%%%%%%%
-% transform 4 corners of image with homography
+img1=double(img1);
+img2 = double(img2);
 
+% transform 4 corners of image with homography to determine boundaries
 img2Xmin = 1;
 img2Ymin = 1;
 img2Xmax = size(img2,2);
@@ -37,37 +38,30 @@ maxYval = round(max( [tLC_y, tRC_y, bLC_y, bRC_y, img2Ymax] ));
 final_x_size = maxXval - minXval + 1;
 final_y_size = maxYval - minYval + 1;
 
+%calculate translation matrix to map both images to destination
 trans = [1 0 -minXval+1;
          0 1 -minYval+1;
          0 0  1 ];
 invTrans = inv(trans);
 
-img1=double(img1);
-
-h = inv(trans*H);
-
-[xi, yi] = meshgrid(1:final_x_size,1:final_y_size);
-xx = (h(1,1)*xi+h(1,2)*yi+h(1,3))./(h(3,1)*xi+h(3,2)*yi+h(3,3));
-yy = (h(2,1)*xi+h(2,2)*yi+h(2,3))./(h(3,1)*xi+h(3,2)*yi+h(3,3));
-
-img1Trans = uint8(interp2(img1,xx,yy));
-figure;imshow(img1Trans);
-
+%translate img2 onto destination
 [xii, yii] = meshgrid(1:final_x_size,1:final_y_size);
 xx = (invTrans(1,1)*xii+invTrans(1,2)*yii+invTrans(1,3))./(invTrans(3,1)*xii+invTrans(3,2)*yii+invTrans(3,3));
 yy = (invTrans(2,1)*xii+invTrans(2,2)*yii+invTrans(2,3))./(invTrans(3,1)*xii+invTrans(3,2)*yii+invTrans(3,3));
-
-img2 = double(img2);
 img2Trans = uint8(interp2(img2,xx,yy));
-figure;imshow(img2Trans);
 
+h = inv(trans*H);
+
+%warp img1 onto destination using bilinear interpolation
+[xi, yi] = meshgrid(1:final_x_size,1:final_y_size);
+xx = (h(1,1)*xi+h(1,2)*yi+h(1,3))./(h(3,1)*xi+h(3,2)*yi+h(3,3));
+yy = (h(2,1)*xi+h(2,2)*yi+h(2,3))./(h(3,1)*xi+h(3,2)*yi+h(3,3));
+img1Trans = uint8(interp2(img1,xx,yy));
+
+%blend the two images by averaging areas of overlap
 blended_img = double(img1Trans) + double(img2Trans);
 overlap = img1Trans & img2Trans;
-
 blended_img(overlap) = double(blended_img(overlap))/2;
-
 blended_img = uint8(blended_img);
-
-figure;imshow(blended_img);
 
 nImg = blended_img;

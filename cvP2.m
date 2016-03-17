@@ -18,37 +18,44 @@ img2_double = im2double(img2_gray);
 %% Apply Harris Corner Detector to images
 % Defining the image region which contains the corners
 disp('calculating harris corner response')
-harris_win_size = 13;
+harris_win_size = 15;
 harris_k = 0.05;
-R_surf_1 = harris_corners ( img1_double, harris_win_size, harris_k );
-R_surf_2 = harris_corners ( img2_double, harris_win_size, harris_k );
+show_R_surf = 1;
+R_surf_1 = harris_corners ( img1_double, harris_win_size, harris_k, show_R_surf );
+R_surf_2 = harris_corners ( img2_double, harris_win_size, harris_k, show_R_surf );
 disp('done calculating harris corner response')
 
 %% Non-Maximum Supression to find sparse set of corner features
 %placeholders
 disp('performing nonmaximal suprression')
 nonmax_win_size = 11;
-nonmax_thresh = 2000;
+nonmax_thresh = 500;
 corners_1 = nonmaxSupression( R_surf_1, nonmax_win_size, nonmax_thresh );
 corners_2 = nonmaxSupression( R_surf_2, nonmax_win_size, nonmax_thresh );
 disp('done performing nonmax supression')
-
-%TESTING - diagnostic plots
-figure(3);imshow(img1);hold on;scatter(corners_1(:,2),corners_1(:,1));
-figure(4);imshow(img2);hold on;scatter(corners_2(:,2),corners_2(:,1));
 
 %% Compute NCC (normalized cross correlation), threshold
 disp('computing NCC in regions of corners')
 NCC_win_size = 5;
 NCC_threshold = 0.85;
-[matches_1, matches_2] = calc_NCC( img1_double, corners_1, img2_double, corners_2, NCC_win_size, NCC_threshold );
+plot_matches = 1;
+[matches_1, matches_2] = calc_NCC( img1_double, corners_1, img2_double, corners_2, NCC_win_size, NCC_threshold, plot_matches );
 disp('done computing NCC')
 
-%% Estimate the homography using chosen corners using RANSAC
+%% Eliminate outliers from matched corners using RANSAC
+disp('estimating homography using RANSAC')
 dist_thresh = 10;
-[inliers_1, inliers_2] = RANSAC( matches_1, matches_2, dist_thresh, img1_double, img2_double );
+plot_inliers = 1;
+[inliers_1, inliers_2] = RANSAC( matches_1, matches_2, dist_thresh, img1_double, img2_double, plot_inliers );
+disp('done estimating homography')
 
+%% Estimate homography using inliers returned by RANSAC
+disp('find homography using least squares')
 h = homogFromSVD( inliers_1, inliers_2 );
+disp('done finding homography')
 
 %% Warp one image onto the other
-warpImage(rgb2gray(img1), rgb2gray(img2), h);
+disp('warping image')
+newImage = warpImage(rgb2gray(img1), rgb2gray(img2), h);
+figure;imshow(newImage);
+disp('Done!')
