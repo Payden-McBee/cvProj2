@@ -14,7 +14,7 @@ img2_double = im2double(img2);
 %% Apply Harris Corner Detector to images
 % Defining the image region which contains the corners
 disp('calculating harris corner response')
-harris_win_size = 5;
+harris_win_size = 19;
 harris_k = 0.04;
 R_surf_1 = harris_corners ( img1_double, harris_win_size, harris_k );
 R_surf_2 = harris_corners ( img2_double, harris_win_size, harris_k );
@@ -24,7 +24,7 @@ disp('done calculating harris corner response')
 %placeholders
 disp('performing nonmaximal suprression')
 nonmax_win_size = 9;
-nonmax_thresh = 400;
+nonmax_thresh = 1000;
 corners_1 = nonmaxSupression( R_surf_1, nonmax_win_size, nonmax_thresh );
 corners_2 = nonmaxSupression( R_surf_2, nonmax_win_size, nonmax_thresh );
 disp('done performing nonmax supression')
@@ -35,14 +35,14 @@ figure(4);imshow(img2);hold on;scatter(corners_2(:,2),corners_2(:,1));
 
 %% Compute NCC (normalized cross correlation), threshold
 disp('computing NCC in regions of corners')
-NCC_win_size = 15;
+NCC_win_size = 5;
 matches = calc_NCC( img1_double, corners_1, img2_double, corners_2, NCC_win_size );
 disp('done computing NCC')
 
 %% Estimate the homography using chosen corners using RANSAC
-dist_thresh = 15;
-inliers_thresh = 0.75;
-[inliers_1, inliers_2] = RANSAC( corners_1, corners_2, matches, dist_thresh, inliers_thresh);
+dist_thresh = 5;
+inliers_thresh = 0.6;
+[inliers_1, inliers_2] = RANSAC( corners_1, corners_2, matches, dist_thresh );
 
 h = homogFromSVD( inliers_1, inliers_2 );
 

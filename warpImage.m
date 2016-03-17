@@ -51,15 +51,22 @@ xx = (h(1,1)*xi+h(1,2)*yi+h(1,3))./(h(3,1)*xi+h(3,2)*yi+h(3,3));
 yy = (h(2,1)*xi+h(2,2)*yi+h(2,3))./(h(3,1)*xi+h(3,2)*yi+h(3,3));
 
 img1Trans = uint8(interp2(img1,xx,yy));
- 
+figure;imshow(img1Trans);
+
 [xii, yii] = meshgrid(1:final_x_size,1:final_y_size);
 xx = (invTrans(1,1)*xii+invTrans(1,2)*yii+invTrans(1,3))./(invTrans(3,1)*xii+invTrans(3,2)*yii+invTrans(3,3));
 yy = (invTrans(2,1)*xii+invTrans(2,2)*yii+invTrans(2,3))./(invTrans(3,1)*xii+invTrans(3,2)*yii+invTrans(3,3));
 
 img2 = double(img2);
 img2Trans = uint8(interp2(img2,xx,yy));
+figure;imshow(img2Trans);
 
-blended_img = imfuse(img1Trans, img2Trans, 'blend');
+blended_img = double(img1Trans) + double(img2Trans);
+overlap = img1Trans & img2Trans;
+
+blended_img(overlap) = double(blended_img(overlap))/2;
+
+blended_img = uint8(blended_img);
 
 figure;imshow(blended_img);
 
