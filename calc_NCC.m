@@ -91,8 +91,8 @@ for i=1:size(NCC_match,1)
     if ( NCC_match(i)>0 )
         matches_1(j,1) = corners_1(i,2);
         matches_1(j,2) = corners_1(i,1);
-        matches_2(j,1) = corners_2(i,2);
-        matches_2(j,2) = corners_2(i,1);
+        matches_2(j,1) = corners_2(NCC_match(i),2);
+        matches_2(j,2) = corners_2(NCC_match(i),1);
         j=j+1;
     end
     

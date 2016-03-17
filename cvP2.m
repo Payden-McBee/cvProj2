@@ -18,8 +18,8 @@ img2_double = im2double(img2_gray);
 %% Apply Harris Corner Detector to images
 % Defining the image region which contains the corners
 disp('calculating harris corner response')
-harris_win_size = 11;
-harris_k = 0.06;
+harris_win_size = 13;
+harris_k = 0.05;
 R_surf_1 = harris_corners ( img1_double, harris_win_size, harris_k );
 R_surf_2 = harris_corners ( img2_double, harris_win_size, harris_k );
 disp('done calculating harris corner response')
@@ -39,8 +39,8 @@ figure(4);imshow(img2);hold on;scatter(corners_2(:,2),corners_2(:,1));
 
 %% Compute NCC (normalized cross correlation), threshold
 disp('computing NCC in regions of corners')
-NCC_win_size = 11;
-NCC_threshold = 0.5;
+NCC_win_size = 5;
+NCC_threshold = 0.85;
 [matches_1, matches_2] = calc_NCC( img1_double, corners_1, img2_double, corners_2, NCC_win_size, NCC_threshold );
 disp('done computing NCC')
 
